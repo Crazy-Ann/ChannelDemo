@@ -1,0 +1,214 @@
+apply plugin: 'com.android.application'
+
+def pa() {
+    def propertiesFile = file('a.properties')
+    if (propertiesFile.canRead()) {
+        Properties properties = new Properties()
+        properties.load(new FileInputStream(propertiesFile))
+        if (properties != null && properties.containsKey('STORE_FILE') && properties.containsKey('STORE_PASSWORD') && properties.containsKey('KEY_ALIAS') && properties.containsKey('KEY_PASSWORD')) {
+            android.signingConfigs.sa.storeFile = file(properties['STORE_FILE'])
+            android.signingConfigs.sa.storePassword = properties['STORE_PASSWORD']
+            android.signingConfigs.sa.keyAlias = properties['KEY_ALIAS']
+            android.signingConfigs.sa.keyPassword = properties['KEY_PASSWORD']
+        } else {
+            println 'signing.properties found but some entries are missing'
+            android.buildTypes.release.signingConfig = null
+        }
+    } else {
+        println 'signing.properties not found'
+        android.buildTypes.release.signingConfig = null
+    }
+}
+
+def pb() {
+    def propertiesFile = file('b.properties')
+    if (propertiesFile.canRead()) {
+        Properties properties = new Properties()
+        properties.load(new FileInputStream(propertiesFile))
+        if (properties != null && properties.containsKey('STORE_FILE') && properties.containsKey('STORE_PASSWORD') && properties.containsKey('KEY_ALIAS') && properties.containsKey('KEY_PASSWORD')) {
+            android.signingConfigs.sb.storeFile = file(properties['STORE_FILE'])
+            android.signingConfigs.sb.storePassword = properties['STORE_PASSWORD']
+            android.signingConfigs.sb.keyAlias = properties['KEY_ALIAS']
+            android.signingConfigs.sb.keyPassword = properties['KEY_PASSWORD']
+        } else {
+            println 'signing.properties found but some entries are missing'
+            android.buildTypes.release.signingConfig = null
+        }
+    } else {
+        println 'signing.properties not found'
+        android.buildTypes.release.signingConfig = null
+    }
+}
+
+def pc() {
+    def propertiesFile = file('c.properties')
+    if (propertiesFile.canRead()) {
+        Properties properties = new Properties()
+        properties.load(new FileInputStream(propertiesFile))
+        if (properties != null && properties.containsKey('STORE_FILE') && properties.containsKey('STORE_PASSWORD') && properties.containsKey('KEY_ALIAS') && properties.containsKey('KEY_PASSWORD')) {
+            android.signingConfigs.sc.storeFile = file(properties['STORE_FILE'])
+            android.signingConfigs.sc.storePassword = properties['STORE_PASSWORD']
+            android.signingConfigs.sc.keyAlias = properties['KEY_ALIAS']
+            android.signingConfigs.sc.keyPassword = properties['KEY_PASSWORD']
+        } else {
+            println 'signing.properties found but some entries are missing'
+            android.buildTypes.release.signingConfig = null
+        }
+    } else {
+        println 'signing.properties not found'
+        android.buildTypes.release.signingConfig = null
+    }
+}
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    defaultConfig {
+        applicationId "com.yjt.demo"
+        testInstrumentationRunner deps.AndroidJUnitRunner
+    }
+
+    signingConfigs {
+        sa {
+            storeFile
+            storePassword
+            keyAlias
+            keyPassword
+        }
+        sb {
+            storeFile
+            storePassword
+            keyAlias
+            keyPassword
+        }
+        sc {
+            storeFile
+            storePassword
+            keyAlias
+            keyPassword
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-debug'
+        }
+        release {
+            minifyEnabled true
+            zipAlignEnabled true
+            shrinkResources true
+            applicationIdSuffix '.release'
+            versionNameSuffix '-release'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            applicationVariants.all { variant ->
+//                variant.outputs.each { output ->
+//                    def outputFile = output.outputFile
+//                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+//                        def fileName = "${variant.productFlavors[0].name}_v${defaultConfig.versionName}_${new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))}" + '.apk'
+//                        output.outputFile = new File(outputFile.parent, fileName)
+//                    }
+//                }
+//            }
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+            manifest.srcFile 'src/main/AndroidManifest.xml'
+            java.srcDirs = ['src/main/java']
+            resources.srcDirs = ['src/main/resources']
+            aidl.srcDirs = ['src/main/aidl']
+            res.srcDirs = ['src/main/res']
+            assets.srcDirs = ['src/main/assets']
+        }
+        fa {
+            jniLibs.srcDirs = ['libs']
+            manifest.srcFile 'src/main/AndroidManifest.xml'
+            java.srcDirs = ['src/fa/java']
+            resources.srcDirs = ['src/fa/resources']
+            aidl.srcDirs = ['src/fa/aidl']
+            res.srcDirs = ['src/fa/res']
+            assets.srcDirs = ['src/fa/assets']
+        }
+        fb {
+            jniLibs.srcDirs = ['libs']
+            manifest.srcFile 'src/main/AndroidManifest.xml'
+            java.srcDirs = ['src/fb/java']
+            resources.srcDirs = ['src/fb/resources']
+            aidl.srcDirs = ['src/fb/aidl']
+            res.srcDirs = ['src/fb/res']
+            assets.srcDirs = ['src/fb/assets']
+        }
+        fc {
+            jniLibs.srcDirs = ['libs']
+            manifest.srcFile 'src/main/AndroidManifest.xml'
+            java.srcDirs = ['src/fc/java']
+            resources.srcDirs = ['src/fc/resources']
+            aidl.srcDirs = ['src/fc/aidl']
+            res.srcDirs = ['src/fc/res']
+            assets.srcDirs = ['src/fc/assets']
+        }
+        instrumentTest.setRoot('androidTest')
+        debug.setRoot('build-types/debug')
+        release.setRoot('build-types/release')
+    }
+
+    pa()
+    pb()
+    pc()
+
+    flavorDimensions "da", "db"
+    productFlavors {
+        fa {
+            dimension 'da'
+            applicationId "com.yjt.demo.a"
+            minSdkVersion rootProject.ext.minSdkVersion
+            targetSdkVersion rootProject.ext.targetSdkVersion
+            versionCode 1
+            versionName "1.0.0.0"
+            signingConfig signingConfigs.sa
+            manifestPlaceholders = [app_icon: "@mipmap/icon_A",
+                                    app_name: "fa"]
+        }
+        fb {
+            dimension 'db'
+            applicationId "com.yjt.demo.b"
+            minSdkVersion rootProject.ext.minSdkVersion
+            targetSdkVersion rootProject.ext.targetSdkVersion
+            versionCode 2
+            versionName "2.0.0.0"
+            signingConfig signingConfigs.sb
+            manifestPlaceholders = [app_icon: "@mipmap/icon_B",
+                                    app_name: "fb"]
+        }
+        fc {
+            dimension 'da'
+            applicationId "com.yjt.demo.c"
+            minSdkVersion rootProject.ext.minSdkVersion
+            targetSdkVersion rootProject.ext.targetSdkVersion
+            versionCode 3
+            versionName "3.0.0.0"
+            signingConfig signingConfigs.sc
+            manifestPlaceholders = [app_icon: "@mipmap/icon_C",
+                                    app_name: "fc"]
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+
+}
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    implementation deps.appcompat_v7
+    testImplementation deps.junit
+    implementation deps.multconstraint_layoutidex
+}

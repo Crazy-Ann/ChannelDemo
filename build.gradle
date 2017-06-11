@@ -1,0 +1,46 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+
+    repositories {
+        maven { url 'https://maven.google.com' }
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.0-alpha3'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        maven { url 'https://maven.google.com' }
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+ext {
+    minSdkVersion = 19
+    targetSdkVersion = 25
+    compileSdkVersion = 25
+    buildToolsVersion = "25.0.2"
+    sourceCompatibilityVersion = JavaVersion.VERSION_1_8
+    targetCompatibilityVersion = JavaVersion.VERSION_1_8
+}
+
+ext.deps = [
+        AndroidJUnitRunner       : '"android.support.test.runner.AndroidJUnitRunner"',
+        appcompat_v4             : 'com.android.support:support-v4:25.3.1',
+        appcompat_v7             : 'com.android.support:appcompat-v7:25.3.1',
+        design                   : 'com.android.support:design:25.3.1',
+        junit                    : 'junit:junit:4.12',
+        multidex                 : 'com.android.support:multidex:1.0.1',
+        multconstraint_layoutidex: 'com.android.support.constraint:constraint-layout:1.0.2'
+]
+
